@@ -30,5 +30,6 @@ build:
     - script:
         name: goveralls
         code: |
+          go get github.com/axw/gocov/gocov
           go get github.com/mattn/goveralls
           goveralls -service=wercker.com -repotoken $COVERALLS_REPO_TOKEN
