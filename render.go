@@ -36,7 +36,7 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 		innerPath = paths[1]
 	}
 
-	tpl, err := ace.ParseFiles(basePath, innerPath, opts)
+	tpl, err := ace.Load(basePath, innerPath, opts)
 
 	if err != nil {
 		http.Error(r, err.Error(), http.StatusInternalServerError)
