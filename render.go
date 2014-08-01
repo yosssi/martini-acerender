@@ -15,18 +15,17 @@ const defaultContentType = render.ContentHTML + "; charset=utf-8"
 
 // Render is an interface for parsing Ace templates and redering HTML.
 type Render interface {
-	HTML(status int, name string, v interface{}, htmlOpt ...render.HTMLOptions)
+	HTML(status int, name string, v interface{}, opts *ace.Options)
 }
 
 // render represents a renderer of Ace templates.
 type renderer struct {
 	http.ResponseWriter
-	req  *http.Request
-	opts *ace.Options
+	req *http.Request
 }
 
 // HTML parses the Ace templates and renders HTML to the response writer.
-func (r *renderer) HTML(status int, name string, v interface{}, htmlOpt ...render.HTMLOptions) {
+func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Options) {
 	var basePath, innerPath string
 
 	paths := strings.Split(name, ":")
@@ -37,7 +36,7 @@ func (r *renderer) HTML(status int, name string, v interface{}, htmlOpt ...rende
 		innerPath = paths[1]
 	}
 
-	tpl, err := ace.ParseFiles(basePath, innerPath, r.opts)
+	tpl, err := ace.ParseFiles(basePath, innerPath, opts)
 
 	if err != nil {
 		http.Error(r, err.Error(), http.StatusInternalServerError)
@@ -57,13 +56,12 @@ func (r *renderer) HTML(status int, name string, v interface{}, htmlOpt ...rende
 }
 
 // Renderer is a Martini middleware that maps a render.Render service into the Martini handler chain.
-func Renderer(opts *ace.Options) martini.Handler {
+func Renderer() martini.Handler {
 	return func(res http.ResponseWriter, req *http.Request, c martini.Context) {
 		c.MapTo(
 			&renderer{
 				ResponseWriter: res,
 				req:            req,
-				opts:           opts,
 			},
 			(*Render)(nil),
 		)
