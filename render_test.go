@@ -58,7 +58,7 @@ func Test_renderer_HTML(t *testing.T) {
 
 func TestRenderer(t *testing.T) {
 	m := martini.Classic()
-	m.Use(Renderer())
+	m.Use(Renderer(nil))
 	m.Get("/", func(r Render) {
 		r.HTML(http.StatusOK, "test/0001", nil, nil)
 	})

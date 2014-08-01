@@ -56,7 +56,7 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 }
 
 // Renderer is a Martini middleware that maps a render.Render service into the Martini handler chain.
-func Renderer() martini.Handler {
+func Renderer(_ *Options) martini.Handler {
 	return func(res http.ResponseWriter, req *http.Request, c martini.Context) {
 		c.MapTo(
 			&renderer{
