@@ -6,7 +6,7 @@
 
 ## Overview
 
-Martini Acerender is a Martini middleware/handler for parsing Ace templates and rendering HTML.
+Martini Acerender is a Martini middleware/handler for parsing [Ace](https://github.com/yosssi/ace) templates and rendering HTML.
 
 ## Example
 
