@@ -32,4 +32,4 @@ build:
         code: |
           go get github.com/axw/gocov/gocov
           go get github.com/mattn/goveralls
-          goveralls -v -service=wercker.com -repotoken $COVERALLS_REPO_TOKEN
+          GIT_BRANCH=$WERCKER_GIT_BRANCH goveralls -coverprofile=coverage.out -service=wercker.com -repotoken $COVERALLS_REPO_TOKEN
