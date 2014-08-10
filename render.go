@@ -16,6 +16,9 @@ const defaultContentType = render.ContentHTML + "; charset=utf-8"
 // Render is an interface for parsing Ace templates and redering HTML.
 type Render interface {
 	HTML(status int, name string, v interface{}, opts *ace.Options)
+	Ace(status int, name string, v interface{})
+	AceOk(name string, v interface{})
+	AceNotFound(name string, v interface{})
 }
 
 // render represents a renderer of Ace templates.
