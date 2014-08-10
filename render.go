@@ -62,6 +62,10 @@ func (r *renderer) Ace(status int, name string, v interface{}) {
 		BaseDir: r.Base,
 	}
 
+	if martini.Env == martini.Dev {
+		options.DynamicReload = true
+	}
+
 	r.HTML(status, name, v, options)
 
 }
