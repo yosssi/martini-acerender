@@ -62,7 +62,7 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 func (r *renderer) Ace(status int, name string, v interface{}) {
 
 	options := &ace.Options{
-		BaseDir: r.Options.Base,
+		BaseDir: r.Options.BaseDir,
 	}
 
 	if martini.Env == martini.Dev {

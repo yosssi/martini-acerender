@@ -91,7 +91,7 @@ func Test_renderer_AceOK(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 
 	options := Options{
-		Base: "test",
+		BaseDir: "test",
 	}
 
 	r := &renderer{
@@ -113,7 +113,7 @@ func Test_renderer_AceNotFound(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 
 	options := Options{
-		Base: "test",
+		BaseDir: "test",
 	}
 
 	r := &renderer{
@@ -135,7 +135,7 @@ func Test_renderer_Ace_ChangeBase(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 
 	options := Options{
-		Base: "test",
+		BaseDir: "test",
 	}
 
 	r := &renderer{
