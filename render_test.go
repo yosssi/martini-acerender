@@ -69,3 +69,36 @@ func TestRenderer(t *testing.T) {
 		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
 	}
 }
+
+func Test_renderer_Ace(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+	}
+
+	r.Ace(http.StatusOK, "test/0003:test/0004", nil)
+
+	if res.Code != http.StatusOK {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
+	}
+}
+
+func Test_renderer_Ace_ChangeBase(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+		Base:           "test",
+	}
+
+	r.Ace(http.StatusOK, "0003:0004", nil)
+
+	if res.Code != http.StatusOK {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
+	}
+}
