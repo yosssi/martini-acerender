@@ -21,8 +21,8 @@ type Render interface {
 // render represents a renderer of Ace templates.
 type renderer struct {
 	http.ResponseWriter
-	req  *http.Request
-	Base string
+	req     *http.Request
+	Options Options
 }
 
 // HTML parses the Ace templates and renders HTML to the response writer.
@@ -59,7 +59,7 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 func (r *renderer) Ace(status int, name string, v interface{}) {
 
 	options := &ace.Options{
-		BaseDir: r.Base,
+		BaseDir: r.Options.Base,
 	}
 
 	if martini.Env == martini.Dev {
@@ -79,12 +79,13 @@ func (r *renderer) AceNotFound(name string, v interface{}) {
 }
 
 // Renderer is a Martini middleware that maps a render.Render service into the Martini handler chain.
-func Renderer(_ *Options) martini.Handler {
+func Renderer(o Options) martini.Handler {
 	return func(res http.ResponseWriter, req *http.Request, c martini.Context) {
 		c.MapTo(
 			&renderer{
 				ResponseWriter: res,
 				req:            req,
+				Options:        o,
 			},
 			(*Render)(nil),
 		)

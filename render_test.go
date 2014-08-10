@@ -58,7 +58,7 @@ func Test_renderer_HTML(t *testing.T) {
 
 func TestRenderer(t *testing.T) {
 	m := martini.Classic()
-	m.Use(Renderer(nil))
+	m.Use(Renderer(Options{}))
 	m.Get("/", func(r Render) {
 		r.HTML(http.StatusOK, "test/0001", nil, nil)
 	})
@@ -90,10 +90,14 @@ func Test_renderer_AceOK(t *testing.T) {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
 
+	options := Options{
+		Base: "test",
+	}
+
 	r := &renderer{
 		ResponseWriter: res,
 		req:            req,
-		Base:           "test",
+		Options:        options,
 	}
 
 	r.AceOk("0003:0004", nil)
@@ -108,10 +112,14 @@ func Test_renderer_AceNotFound(t *testing.T) {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
 
+	options := Options{
+		Base: "test",
+	}
+
 	r := &renderer{
 		ResponseWriter: res,
 		req:            req,
-		Base:           "test",
+		Options:        options,
 	}
 
 	r.AceNotFound("0003:0004", nil)
@@ -126,10 +134,14 @@ func Test_renderer_Ace_ChangeBase(t *testing.T) {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
 
+	options := Options{
+		Base: "test",
+	}
+
 	r := &renderer{
 		ResponseWriter: res,
 		req:            req,
-		Base:           "test",
+		Options:        options,
 	}
 
 	r.Ace(http.StatusOK, "0003:0004", nil)
