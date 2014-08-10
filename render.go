@@ -66,6 +66,14 @@ func (r *renderer) Ace(status int, name string, v interface{}) {
 
 }
 
+func (r *renderer) AceOk(name string, v interface{}) {
+	r.Ace(http.StatusOK, name, v)
+}
+
+func (r *renderer) AceNotFound(name string, v interface{}) {
+	r.Ace(http.StatusNotFound, name, v)
+}
+
 // Renderer is a Martini middleware that maps a render.Render service into the Martini handler chain.
 func Renderer(_ *Options) martini.Handler {
 	return func(res http.ResponseWriter, req *http.Request, c martini.Context) {
