@@ -21,7 +21,8 @@ type Render interface {
 // render represents a renderer of Ace templates.
 type renderer struct {
 	http.ResponseWriter
-	req *http.Request
+	req  *http.Request
+	Base string
 }
 
 // HTML parses the Ace templates and renders HTML to the response writer.
@@ -53,6 +54,16 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 	r.Header().Set(render.ContentType, defaultContentType)
 	r.WriteHeader(status)
 	io.Copy(r, buf)
+}
+
+func (r *renderer) Ace(status int, name string, v interface{}) {
+
+	options := &ace.Options{
+		BaseDir: r.Base,
+	}
+
+	r.HTML(status, name, v, options)
+
 }
 
 // Renderer is a Martini middleware that maps a render.Render service into the Martini handler chain.

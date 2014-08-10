@@ -86,6 +86,42 @@ func Test_renderer_Ace(t *testing.T) {
 	}
 }
 
+func Test_renderer_AceOK(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+		Base:           "test",
+	}
+
+	r.AceOk("0003:0004", nil)
+
+	if res.Code != http.StatusOK {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
+	}
+
+}
+
+func Test_renderer_AceNotFound(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+		Base:           "test",
+	}
+
+	r.AceNotFound("0003:0004", nil)
+
+	if res.Code != http.StatusNotFound {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusNotFound)
+	}
+
+}
+
 func Test_renderer_Ace_ChangeBase(t *testing.T) {
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
