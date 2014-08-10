@@ -22,7 +22,7 @@ import (
 
 func main() {
 	m := martini.Classic()
-	m.Use(acerender.Renderer(nil))
+	m.Use(acerender.Renderer(acerender.Options{BaseDir: "assets"}))
 	m.Get("/", func(r acerender.Render) {
 		r.HTML(200, "base:inner", map[string]string{"Msg": "Hello Acerender"}, nil)
 	})

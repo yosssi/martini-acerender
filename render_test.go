@@ -58,13 +58,94 @@ func Test_renderer_HTML(t *testing.T) {
 
 func TestRenderer(t *testing.T) {
 	m := martini.Classic()
-	m.Use(Renderer(nil))
+	m.Use(Renderer(Options{}))
 	m.Get("/", func(r Render) {
 		r.HTML(http.StatusOK, "test/0001", nil, nil)
 	})
 	res := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
 	m.ServeHTTP(res, req)
+	if res.Code != http.StatusOK {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
+	}
+}
+
+func Test_renderer_Ace(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+	}
+
+	r.Ace(http.StatusOK, "test/0003:test/0004", nil)
+
+	if res.Code != http.StatusOK {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
+	}
+}
+
+func Test_renderer_AceOK(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	options := Options{
+		BaseDir: "test",
+	}
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+		Options:        options,
+	}
+
+	r.AceOk("0003:0004", nil)
+
+	if res.Code != http.StatusOK {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
+	}
+
+}
+
+func Test_renderer_AceNotFound(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	options := Options{
+		BaseDir: "test",
+	}
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+		Options:        options,
+	}
+
+	r.AceNotFound("0003:0004", nil)
+
+	if res.Code != http.StatusNotFound {
+		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusNotFound)
+	}
+
+}
+
+func Test_renderer_Ace_ChangeBase(t *testing.T) {
+	res := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	options := Options{
+		BaseDir: "test",
+	}
+
+	r := &renderer{
+		ResponseWriter: res,
+		req:            req,
+		Options:        options,
+	}
+
+	r.Ace(http.StatusOK, "0003:0004", nil)
+
 	if res.Code != http.StatusOK {
 		t.Errorf("invalid HTTP status code [actual: %d][expected: %d]", res.Code, http.StatusOK)
 	}
