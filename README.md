@@ -60,3 +60,63 @@ inner.ace
 = content sub
   h3 Inner Template - Sub : {{.Msg}}
 ```
+
+## Ace Options
+
+You can pass [the options for Ace template engine](http://godoc.org/github.com/yosssi/ace#Options) to Martini Acerender.
+
+### Options per application
+
+You can set the Ace options per application.
+
+```go
+package main
+
+import (
+	"github.com/go-martini/martini"
+	"github.com/yosssi/ace"
+	"github.com/yosssi/martini-acerender"
+)
+
+func main() {
+	m := martini.Classic()
+	m.Use(acerender.Renderer(&acerender.Options{
+		AceOptions: &ace.Options{
+			BaseDir: "views",
+		},
+	}))
+	m.Get("/", func(r acerender.Render) {
+		r.HTML(200, "base:inner", map[string]string{"Msg": "Hello Acerender"}, nil)
+	})
+	m.Run()
+}
+```
+
+### Options per request
+
+You can set the Ace options per request or you can override the Ace options per application with ones per request.
+
+```go
+package main
+
+import (
+	"github.com/go-martini/martini"
+	"github.com/yosssi/ace"
+	"github.com/yosssi/martini-acerender"
+)
+
+func main() {
+	m := martini.Classic()
+	m.Use(acerender.Renderer(&acerender.Options{
+		AceOptions: &ace.Options{
+			BaseDir: "views",
+		},
+	}))
+	m.Get("/", func(r acerender.Render) {
+		r.HTML(200, "base:inner", map[string]string{"Msg": "Hello Acerender"}, &ace.Options{
+			BaseDir: "templates",
+		})
+	})
+	m.Run()
+}
+```
