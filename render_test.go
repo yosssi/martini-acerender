@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/go-martini/martini"
+	"github.com/yosssi/ace-proxy"
 )
 
 func Test_renderer_HTML_parseError(t *testing.T) {
@@ -15,6 +16,7 @@ func Test_renderer_HTML_parseError(t *testing.T) {
 	r := &renderer{
 		ResponseWriter: res,
 		req:            req,
+		p:              proxy.New(nil),
 	}
 
 	r.HTML(http.StatusOK, "not_exist_template", nil, nil)
@@ -31,6 +33,7 @@ func Test_renderer_HTML_executeError(t *testing.T) {
 	r := &renderer{
 		ResponseWriter: res,
 		req:            req,
+		p:              proxy.New(nil),
 	}
 
 	r.HTML(http.StatusOK, "test/0002", "test", nil)
@@ -47,6 +50,7 @@ func Test_renderer_HTML(t *testing.T) {
 	r := &renderer{
 		ResponseWriter: res,
 		req:            req,
+		p:              proxy.New(nil),
 	}
 
 	r.HTML(http.StatusOK, "test/0003:test/0004", nil, nil)

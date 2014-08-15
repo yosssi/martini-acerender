@@ -9,6 +9,7 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"github.com/yosssi/ace"
+	"github.com/yosssi/ace-proxy"
 )
 
 const defaultContentType = render.ContentHTML + "; charset=utf-8"
@@ -22,6 +23,7 @@ type Render interface {
 type renderer struct {
 	http.ResponseWriter
 	req *http.Request
+	p   *proxy.Proxy
 }
 
 // HTML parses the Ace templates and renders HTML to the response writer.
@@ -36,7 +38,7 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 		innerPath = paths[1]
 	}
 
-	tpl, err := ace.Load(basePath, innerPath, opts)
+	tpl, err := r.p.Load(basePath, innerPath, opts)
 
 	if err != nil {
 		http.Error(r, err.Error(), http.StatusInternalServerError)
@@ -56,12 +58,15 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 }
 
 // Renderer is a Martini middleware that maps a render.Render service into the Martini handler chain.
-func Renderer(_ *Options) martini.Handler {
+func Renderer(opts *Options) martini.Handler {
+	opts = initializeOptions(opts)
+
 	return func(res http.ResponseWriter, req *http.Request, c martini.Context) {
 		c.MapTo(
 			&renderer{
 				ResponseWriter: res,
 				req:            req,
+				p:              proxy.New(opts.AceOptions),
 			},
 			(*Render)(nil),
 		)
