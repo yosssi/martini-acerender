@@ -2,6 +2,7 @@ package acerender
 
 import (
 	"bytes"
+	"html/template"
 	"io"
 	"net/http"
 	"strings"
@@ -38,9 +39,13 @@ func (r *renderer) HTML(status int, name string, v interface{}, opts *ace.Option
 		innerPath = paths[1]
 	}
 
-	tpl, err := r.p.Load(basePath, innerPath, opts)
+	tplc, errc := r.p.Load(basePath, innerPath, opts)
 
-	if err != nil {
+	var tpl *template.Template
+
+	select {
+	case tpl = <-tplc:
+	case err := <-errc:
 		http.Error(r, err.Error(), http.StatusInternalServerError)
 		return
 	}
